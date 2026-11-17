@@ -10,6 +10,8 @@ PROJECT_ROOT: Path = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "TRUE"
+
 import vertexai
 from dotenv import load_dotenv
 from vertexai import agent_engines
@@ -52,13 +54,14 @@ def deploy_agent(
     """Package root_agent inside AdkApp and deploy to Vertex AI Agent Engine."""
     normalized_bucket: str = normalize_bucket_uri(staging_bucket)
 
+    model_id: str = str(getattr(root_agent.model, "model", root_agent.model))
     print("=" * 80)
     print("Deploying ADK Agent to Vertex AI Agent Engine")
     print(f"  Project        : {project_id}")
     print(f"  Region         : {location}")
     print(f"  Staging Bucket : {normalized_bucket}")
     print(f"  Display Name   : {display_name}")
-    print(f"  Agent          : {root_agent.name} ({root_agent.model})")
+    print(f"  Agent          : {root_agent.name} ({model_id})")
     print("=" * 80)
 
     os.chdir(PROJECT_ROOT)

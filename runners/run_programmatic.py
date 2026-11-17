@@ -14,6 +14,9 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from dotenv import load_dotenv
+
+load_dotenv(dotenv_path=PROJECT_ROOT / ".env")
+
 from google.adk.agents.run_config import RunConfig, StreamingMode
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
@@ -206,8 +209,9 @@ async def run_agent_query(prompt: str, stream_enabled: bool = True) -> None:
 
     separator: str = "=" * 80
     mode_label: str = "SSE Real-Time Stream" if stream_enabled else "Batch Response"
+    model_id: str = str(getattr(root_agent.model, "model", root_agent.model))
     print(separator)
-    print(f"Agent   : {root_agent.name} ({root_agent.model})")
+    print(f"Agent   : {root_agent.name} ({model_id})")
     print(f"Mode    : {mode_label} | Session: {SESSION_ID}")
     print(f"Prompt  : {prompt}")
     print(separator, flush=True)
